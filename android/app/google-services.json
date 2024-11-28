@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "736551413173",
+    "firebase_url": "https://maanpos-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "maanpos",
+    "storage_bucket": "maanpos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736551413173:android:813f40f50fcb6b022fe5fc",
+        "android_client_info": {
+          "package_name": "com.maantechnology.maanpos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "736551413173-th763alo5dg7emai9pa56idu57s4m61e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAT1zNWpyIsMp29W0OEKcJ9NJa0b_HvDwE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "736551413173-th763alo5dg7emai9pa56idu57s4m61e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
