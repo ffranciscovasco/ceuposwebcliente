@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -30,8 +31,10 @@ import '../../subscription.dart';
 import '../Customer List/add_customer.dart';
 import '../POS Sale/pos_sale.dart';
 import '../Product/add_product.dart';
+import '../Product/product.dart';
 import '../Purchase/purchase.dart';
 import '../Sale List/sale_list.dart';
+import '../Supplier List/supplier_list.dart';
 import '../Widgets/Footer/footer.dart';
 import '../Widgets/Sidebar/sidebar_widget.dart';
 import '../Widgets/topselling_table_widget.dart';
@@ -134,8 +137,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
   List<HomeReport> getLastCustomerName(List<SaleTransactionModel> model) {
     List<HomeReport> customers = [];
     model.reversed.toList().forEach((element) {
-      HomeReport report =
-          HomeReport(element.customerName, element.totalAmount.toString());
+      HomeReport report = HomeReport(element.customerName, element.totalAmount.toString());
       customers.add(report);
     });
     return customers;
@@ -144,8 +146,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
   List<HomeReport> getLastPurchaserName(List<dynamic> model) {
     List<HomeReport> customers = [];
     model.reversed.toList().forEach((element) {
-      HomeReport report =
-          HomeReport(element.customerName, element.totalAmount.toString());
+      HomeReport report = HomeReport(element.customerName, element.totalAmount.toString());
       customers.add(report);
     });
     return customers;
@@ -154,8 +155,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
   List<HomeReport> getLastDueName(List<DueTransactionModel> model) {
     List<HomeReport> customers = [];
     model.reversed.toList().forEach((element) {
-      HomeReport report =
-          HomeReport(element.customerName, element.payDueAmount.toString());
+      HomeReport report = HomeReport(element.customerName, element.payDueAmount.toString());
       customers.add(report);
     });
     return customers;
@@ -250,26 +250,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
     'AZ',
     'KZ',
     'HR',
-    'NP',
-    'AM',
-    'AS',
-    'BE',
-    'CA',
-    'CY',
-    'ET',
-    'EU',
-    'GL',
-    'IN',
-    'AM',
-    'IS',
-    'KG',
-    'LT',
-    'LV',
-    'MK',
-    'IN',
-    'NO',
-    'IN',
-    'AF',
+    'NP'
   ];
   List<String> countryList = [
     'English',
@@ -318,26 +299,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
     'Azerbaijani',
     'Kazakh',
     'Croatian',
-    'Nepali', //47
-    'Amharic',
-    'Assamese',
-    'Belarusian',
-    'Catalan',
-    'Welsh',
-    'Estonian',
-    'Basque',
-    'Galician',
-    'Gujarati',
-    'Armenian',
-    'Icelandic',
-    'Kirghiz Kyrgyz',
-    'Lithuanian',
-    'Latvian',
-    'Macedonian',
-    'Malayalam',
-    'Norwegian',
-    'Panjabi',
-    'Pushto', //66
+    'Nepali'
   ];
   String selectedCountry = 'English';
 
@@ -360,10 +322,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
     setState(() {});
   }
 
-  Future<void> saveDataOnLocal(
-      {required String key,
-      required String type,
-      required dynamic value}) async {
+  Future<void> saveDataOnLocal({required String key, required String type, required dynamic value}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (type == 'bool') prefs.setBool(key, value);
     if (type == 'string') prefs.setString(key, value);
@@ -401,9 +360,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
             );
           });
     } else {
-      //EasyLoading.showError('Update your plan first\nAdd Customer limit is over.');
-      EasyLoading.showError(
-          '${lang.S.of(context).updateYourPlanFirstAddCustomerLimitIsOver}.');
+      EasyLoading.showError('Update your plan first\nAdd Customer limit is over.');
     }
   }
 
@@ -420,9 +377,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
             );
           });
     } else {
-      // EasyLoading.showError('Update your plan first\nAdd Customer limit is over.');
-      EasyLoading.showError(
-          '${lang.S.of(context).updateYourPlanFirstAddCustomerLimitIsOver}.');
+      EasyLoading.showError('Update your plan first\nAdd Customer limit is over.');
     }
   }
 
@@ -459,8 +414,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
   double totalProfitCurrentMonth = 0;
   double totalProfitPreviousMonth = 0;
   double totalLoss = 0;
-  static DateTime fromDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  static DateTime fromDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   static DateTime toDate = DateTime.now();
   static String selectedIndex = 'Today';
 
@@ -527,29 +481,20 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
 
   @override
   void initState() {
-    // _setupHistory();
     getAllTotal();
     getData();
     selectedCountry;
     Subscription.getUserLimitsData(context: context, wannaShowMsg: true);
-    for (int i = 0;
-        i < DateTime(currentDate.year, currentDate.month + 1, 0).day;
-        i++) {
+    for (int i = 0; i < DateTime(currentDate.year, currentDate.month + 1, 0).day; i++) {
       dailySaleOfCurrentMonth.add(0);
     }
-    for (int i = 0;
-        i < DateTime(currentDate.year, currentDate.month + 1, 0).day;
-        i++) {
+    for (int i = 0; i < DateTime(currentDate.year, currentDate.month + 1, 0).day; i++) {
       dailySale.add(0);
     }
-    for (int i = 0;
-        i < DateTime(currentDate.year, currentDate.month + 1, 0).day;
-        i++) {
+    for (int i = 0; i < DateTime(currentDate.year, currentDate.month + 1, 0).day; i++) {
       dailyExpenseOfCurrentMonth.add(0);
     }
-    for (int i = 0;
-        i < DateTime(currentDate.year, currentDate.month + 1, 0).day;
-        i++) {
+    for (int i = 0; i < DateTime(currentDate.year, currentDate.month + 1, 0).day; i++) {
       dailyExpense.add(0);
     }
     super.initState();
@@ -596,9 +541,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
               ),
               SizedBox(
                 // width: context.width() < 1000 ? 1000 - 240 : MediaQuery.of(context).size.width - 240,
-                width: MediaQuery.of(context).size.width < 1275
-                    ? 1275 - 240
-                    : MediaQuery.of(context).size.width - 240,
+                width: MediaQuery.of(context).size.width < 1275 ? 1275 - 240 : MediaQuery.of(context).size.width - 240,
                 child: SingleChildScrollView(
                   child: Container(
                     decoration: const BoxDecoration(color: kDarkWhite),
@@ -609,13 +552,10 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                         const TopBar(),
                         Consumer(
                           builder: (_, ref, watch) {
-                            AsyncValue<List<SaleTransactionModel>>
-                                transactionReport =
-                                ref.watch(transitionProvider);
+                            AsyncValue<List<SaleTransactionModel>> transactionReport = ref.watch(transitionProvider);
                             final incomes = ref.watch(incomeProvider);
                             final expenses = ref.watch(expenseProvider);
-                            final purchaseTransactionReport =
-                                ref.watch(purchaseTransitionProviderSIngle);
+                            final purchaseTransactionReport = ref.watch(purchaseTransitionProviderSIngle);
                             return Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Row(
@@ -625,13 +565,11 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                   Expanded(
                                     flex: 3,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         expenses.when(data: (allExpenses) {
-                                          return transactionReport.when(
-                                              data: (transaction) {
-                                            ///___________________________________________all_expense_data___________________
+                                          return transactionReport.when(data: (transaction) {
+                                            //___________________________________________all_expense_data___________________
                                             totalExpenseOfYear = [];
                                             expenseCountOfCurrentMonth = [];
                                             expenseCountOfLastMonth = [];
@@ -639,75 +577,30 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                             totalExpenseOfCurrentYear = 0;
                                             totalExpenseOfPreviousYear = 0;
                                             totalExpenseOfCurrentMonth = 0;
-                                            monthlyExpense = [
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ];
+                                            monthlyExpense = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                                             totalExpenseOfLastMonth = 0;
                                             expenseList = [];
                                             for (var element in allExpenses) {
-                                              final expenseDate =
-                                                  DateTime.tryParse(element
-                                                          .expenseDate
-                                                          .toString()) ??
-                                                      DateTime.now();
-                                              if (expenseDate.isAfter(
-                                                  firstDayOfCurrentYear)) {
-                                                totalExpenseOfCurrentYear +=
-                                                    double.parse(element.amount
-                                                        .toString());
-                                                monthlyExpense[
-                                                    expenseDate.month -
-                                                        1] += double.parse(
-                                                    element.amount.toString());
-                                                dailyExpense[
-                                                        expenseDate.day - 1] +=
-                                                    int.parse(element.amount);
+                                              final expenseDate = DateTime.tryParse(element.expenseDate.toString()) ?? DateTime.now();
+                                              if (expenseDate.isAfter(firstDayOfCurrentYear)) {
+                                                totalExpenseOfCurrentYear += double.parse(element.amount.toString());
+                                                monthlyExpense[expenseDate.month - 1] += double.parse(element.amount.toString());
+                                                dailyExpense[expenseDate.day - 1] += int.parse(element.amount);
                                                 totalExpenseOfYear.add(element);
 
-                                                if (expenseDate.isAfter(
-                                                    firstDayOfCurrentMonth)) {
-                                                  totalExpenseOfCurrentMonth +=
-                                                      double.parse(element
-                                                          .amount
-                                                          .toString());
-                                                  expenseCountOfCurrentMonth
-                                                      .add(element);
-                                                  dailyExpenseOfCurrentMonth[
-                                                      expenseDate.day - 1]++;
+                                                if (expenseDate.isAfter(firstDayOfCurrentMonth)) {
+                                                  totalExpenseOfCurrentMonth += double.parse(element.amount.toString());
+                                                  expenseCountOfCurrentMonth.add(element);
+                                                  dailyExpenseOfCurrentMonth[expenseDate.day - 1]++;
                                                 }
 
-                                                if (expenseDate.isAfter(
-                                                        firstDayOfPreviousMonth) &&
-                                                    expenseDate.isBefore(
-                                                        firstDayOfCurrentMonth)) {
-                                                  totalExpenseOfLastMonth +=
-                                                      double.parse(element
-                                                          .amount
-                                                          .toString());
-                                                  expenseCountOfLastMonth
-                                                      .add(element);
+                                                if (expenseDate.isAfter(firstDayOfPreviousMonth) && expenseDate.isBefore(firstDayOfCurrentMonth)) {
+                                                  totalExpenseOfLastMonth += double.parse(element.amount.toString());
+                                                  expenseCountOfLastMonth.add(element);
                                                 }
-                                                if (expenseDate.isAfter(
-                                                        firstDayOfPreviousYear) &&
-                                                    expenseDate.isBefore(
-                                                        firstDayOfCurrentYear)) {
-                                                  totalExpenseOfPreviousYear +=
-                                                      double.parse(element
-                                                          .amount
-                                                          .toString());
-                                                  expenseCountOfLastYear
-                                                      .add(element);
+                                                if (expenseDate.isAfter(firstDayOfPreviousYear) && expenseDate.isBefore(firstDayOfCurrentYear)) {
+                                                  totalExpenseOfPreviousYear += double.parse(element.amount.toString());
+                                                  expenseCountOfLastYear.add(element);
                                                 }
                                               }
                                             }
@@ -722,515 +615,232 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                             totalSaleOfCurrentYear = 0;
                                             totalSaleOfPreviousYear = 0;
                                             totalSaleOfCurrentMonth = 0;
-                                            monthlySale = [
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0,
-                                              0
-                                            ];
+                                            monthlySale = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                                             totalSaleOfLastMonth = 0;
                                             saleList = [];
                                             totalProfitCurrentMonth = 0;
                                             totalProfitPreviousMonth = 0;
 
                                             for (var element in transaction) {
-                                              final saleDate =
-                                                  DateTime.tryParse(element
-                                                          .purchaseDate
-                                                          .toString()) ??
-                                                      DateTime.now();
-                                              if (saleDate.isAfter(
-                                                  firstDayOfCurrentYear)) {
-                                                totalSaleOfCurrentYear +=
-                                                    double.parse(element
-                                                        .totalAmount
-                                                        .toString());
-                                                monthlySale[
-                                                        saleDate.month - 1] +=
-                                                    double.parse(element
-                                                        .totalAmount
-                                                        .toString());
-                                                if (saleDate.day >= 1 &&
-                                                    saleDate.day <=
-                                                        dailySale.length) {
-                                                  dailySale[saleDate.day - 1] +=
-                                                      element.totalAmount!
-                                                          .round();
+                                              final saleDate = DateTime.tryParse(element.purchaseDate.toString()) ?? DateTime.now();
+                                              if (saleDate.isAfter(firstDayOfCurrentYear)) {
+                                                totalSaleOfCurrentYear += double.parse(element.totalAmount.toString());
+                                                monthlySale[saleDate.month - 1] += double.parse(element.totalAmount.toString());
+                                                if (saleDate.day >= 1 && saleDate.day <= dailySale.length) {
+                                                  dailySale[saleDate.day - 1] += element.totalAmount!.round();
                                                 } else {
-                                                  print(
-                                                      "Invalid day: ${saleDate.day}");
+                                                  print("Invalid day: ${saleDate.day}");
                                                 }
                                                 // dailySale[saleDate.day - 1] += element.totalAmount!.round();
                                                 totalSaleOfYear.add(element);
 
-                                                if (saleDate.isAfter(
-                                                    firstDayOfCurrentMonth)) {
-                                                  totalSaleOfCurrentMonth +=
-                                                      double.parse(element
-                                                          .totalAmount
-                                                          .toString());
-                                                  saleCountOfcurrentMonth
-                                                      .add(element);
-                                                  dailySaleOfCurrentMonth[
-                                                      saleDate.day - 1]++;
+                                                if (saleDate.isAfter(firstDayOfCurrentMonth)) {
+                                                  totalSaleOfCurrentMonth += double.parse(element.totalAmount.toString());
+                                                  saleCountOfcurrentMonth.add(element);
+                                                  dailySaleOfCurrentMonth[saleDate.day - 1]++;
                                                   element.lossProfit!.isNegative
-                                                      ? totalLoss = totalLoss +
-                                                          element.lossProfit!
-                                                              .abs()
-                                                      : totalProfitCurrentMonth =
-                                                          double.parse(
-                                                                  totalProfitCurrentMonth
-                                                                      .toString()) +
-                                                              double.parse(element
-                                                                  .lossProfit!
-                                                                  .toString());
+                                                      ? totalLoss = totalLoss + element.lossProfit!.abs()
+                                                      : totalProfitCurrentMonth = double.parse(totalProfitCurrentMonth.toString()) + double.parse(element.lossProfit!.toString());
                                                 }
 
-                                                if (saleDate.isAfter(
-                                                        firstDayOfPreviousMonth) &&
-                                                    saleDate.isBefore(
-                                                        firstDayOfCurrentMonth)) {
-                                                  totalSaleOfLastMonth +=
-                                                      double.parse(element
-                                                          .totalAmount
-                                                          .toString());
-                                                  saleCountOfLastMonth
-                                                      .add(element);
+                                                if (saleDate.isAfter(firstDayOfPreviousMonth) && saleDate.isBefore(firstDayOfCurrentMonth)) {
+                                                  totalSaleOfLastMonth += double.parse(element.totalAmount.toString());
+                                                  saleCountOfLastMonth.add(element);
                                                   element.lossProfit!.isNegative
-                                                      ? totalLoss = totalLoss +
-                                                          element.lossProfit!
-                                                              .abs()
-                                                      : totalProfitCurrentMonth =
-                                                          double.parse(
-                                                                  totalProfitCurrentMonth
-                                                                      .toString()) +
-                                                              double.parse(element
-                                                                  .lossProfit!
-                                                                  .toString());
+                                                      ? totalLoss = totalLoss + element.lossProfit!.abs()
+                                                      : totalProfitCurrentMonth = double.parse(totalProfitCurrentMonth.toString()) + double.parse(element.lossProfit!.toString());
                                                 }
-                                                if (saleDate.isAfter(
-                                                        firstDayOfPreviousYear) &&
-                                                    saleDate.isBefore(
-                                                        firstDayOfCurrentYear)) {
-                                                  totalSaleOfPreviousYear +=
-                                                      double.parse(element
-                                                          .totalAmount
-                                                          .toString());
-                                                  saleCountOfLastYear
-                                                      .add(element);
+                                                if (saleDate.isAfter(firstDayOfPreviousYear) && saleDate.isBefore(firstDayOfCurrentYear)) {
+                                                  totalSaleOfPreviousYear += double.parse(element.totalAmount.toString());
+                                                  saleCountOfLastYear.add(element);
                                                 }
                                               }
                                             }
                                             //_______________________________________total_sale_count_____________
-                                            int currentMonthUserCount =
-                                                saleCountOfcurrentMonth.length;
-                                            int previousMonthSale =
-                                                saleCountOfLastMonth.length;
+                                            int currentMonthUserCount = saleCountOfcurrentMonth.length;
+                                            int previousMonthSale = saleCountOfLastMonth.length;
                                             double percentageChange = 0.0;
                                             if (previousMonthSale > 0) {
-                                              percentageChange =
-                                                  ((currentMonthUserCount -
-                                                              previousMonthSale) /
-                                                          previousMonthSale) *
-                                                      100;
+                                              percentageChange = ((currentMonthUserCount - previousMonthSale) / previousMonthSale) * 100;
                                             } else if (previousMonthSale == 0) {
-                                              percentageChange =
-                                                  (currentMonthUserCount -
-                                                          previousMonthSale) *
-                                                      100;
+                                              percentageChange = (currentMonthUserCount - previousMonthSale) * 100;
                                             } else {
-                                              percentageChange =
-                                                  ((currentMonthUserCount -
-                                                                  previousMonthSale)
-                                                              .abs() /
-                                                          previousMonthSale
-                                                              .abs()) *
-                                                      100;
+                                              percentageChange = ((currentMonthUserCount - previousMonthSale).abs() / previousMonthSale.abs()) * 100;
                                             }
 
                                             //_______________________________________total_sale_amount_____________
-                                            int currentMonthSaleAmount =
-                                                saleCountOfcurrentMonth.length;
-                                            int previousMonthSaleAmount =
-                                                saleCountOfLastMonth.length;
+                                            int currentMonthSaleAmount = saleCountOfcurrentMonth.length;
+                                            int previousMonthSaleAmount = saleCountOfLastMonth.length;
                                             double salePercentage = 0.0;
                                             if (previousMonthSaleAmount > 0) {
-                                              salePercentage =
-                                                  ((currentMonthSaleAmount -
-                                                              previousMonthSaleAmount) /
-                                                          previousMonthSaleAmount) *
-                                                      100;
-                                            } else if (previousMonthSaleAmount ==
-                                                0) {
-                                              salePercentage =
-                                                  (currentMonthSaleAmount -
-                                                          previousMonthSaleAmount) *
-                                                      100;
+                                              salePercentage = ((currentMonthSaleAmount - previousMonthSaleAmount) / previousMonthSaleAmount) * 100;
+                                            } else if (previousMonthSaleAmount == 0) {
+                                              salePercentage = (currentMonthSaleAmount - previousMonthSaleAmount) * 100;
                                             } else {
-                                              salePercentage =
-                                                  ((currentMonthSaleAmount -
-                                                                  previousMonthSaleAmount)
-                                                              .abs() /
-                                                          previousMonthSaleAmount
-                                                              .abs()) *
-                                                      100;
+                                              salePercentage = ((currentMonthSaleAmount - previousMonthSaleAmount).abs() / previousMonthSaleAmount.abs()) * 100;
                                             }
 
                                             // _______________________________________total_profit_amount_____________
-                                            int currentMonthProfit =
-                                                totalProfitCurrentMonth.round();
-                                            int previousMonthProfit =
-                                                totalProfitPreviousMonth
-                                                    .round();
+                                            int currentMonthProfit = totalProfitCurrentMonth.round();
+                                            int previousMonthProfit = totalProfitPreviousMonth.round();
                                             double profitPercentage = 0.0;
                                             if (previousMonthProfit > 0) {
-                                              profitPercentage =
-                                                  ((currentMonthProfit -
-                                                              previousMonthProfit) /
-                                                          previousMonthProfit) *
-                                                      100;
-                                            } else if (previousMonthProfit ==
-                                                0) {
-                                              profitPercentage =
-                                                  (currentMonthProfit -
-                                                          previousMonthProfit) *
-                                                      100;
+                                              profitPercentage = ((currentMonthProfit - previousMonthProfit) / previousMonthProfit) * 100;
+                                            } else if (previousMonthProfit == 0) {
+                                              profitPercentage = (currentMonthProfit - previousMonthProfit) * 100;
                                             } else {
-                                              profitPercentage =
-                                                  ((currentMonthProfit -
-                                                                  previousMonthProfit)
-                                                              .abs() /
-                                                          previousMonthProfit
-                                                              .abs()) *
-                                                      100;
+                                              profitPercentage = ((currentMonthProfit - previousMonthProfit).abs() / previousMonthProfit.abs()) * 100;
                                             }
 
                                             // _______________________________________total_income_amount_____________
-                                            int currentMonthExpense =
-                                                totalExpenseOfCurrentMonth
-                                                    .round();
-                                            int previousMonthExpense =
-                                                totalExpenseOfLastMonth.round();
+                                            int currentMonthExpense = totalExpenseOfCurrentMonth.round();
+                                            int previousMonthExpense = totalExpenseOfLastMonth.round();
                                             double expensePercentage = 0.0;
                                             if (previousMonthExpense > 0) {
-                                              expensePercentage =
-                                                  ((currentMonthExpense -
-                                                              previousMonthExpense) /
-                                                          previousMonthExpense) *
-                                                      100;
-                                            } else if (previousMonthExpense ==
-                                                0) {
-                                              expensePercentage =
-                                                  (currentMonthExpense -
-                                                          previousMonthExpense) *
-                                                      100;
+                                              expensePercentage = ((currentMonthExpense - previousMonthExpense) / previousMonthExpense) * 100;
+                                            } else if (previousMonthExpense == 0) {
+                                              expensePercentage = (currentMonthExpense - previousMonthExpense) * 100;
                                             } else {
-                                              expensePercentage =
-                                                  ((currentMonthExpense -
-                                                                  previousMonthExpense)
-                                                              .abs() /
-                                                          previousMonthExpense
-                                                              .abs()) *
-                                                      100;
+                                              expensePercentage = ((currentMonthExpense - previousMonthExpense).abs() / previousMonthExpense.abs()) * 100;
                                             }
 
                                             return Column(
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     TotalSummary(
-                                                      title: lang.S
-                                                          .of(context)
-                                                          .tSale,
+                                                      title: lang.S.of(context).tSale,
                                                       // count: '${showList.length}',
-                                                      count:
-                                                          '${saleCountOfcurrentMonth.length}',
+                                                      count: '${saleCountOfcurrentMonth.length}',
                                                       withOutCurrency: true,
-                                                      footerTitle: 'This Month',
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFFB9FDEC),
+                                                      footerTitle: 'Este mês',
+                                                      backgroundColor: const Color(0xFFB9FDEC),
                                                       icon: 'images/cust.svg',
-                                                      predictIcon:
-                                                          percentageChange >= 0
-                                                              ? FontAwesomeIcons
-                                                                  .arrowUpLong
-                                                              : FontAwesomeIcons
-                                                                  .arrowDownLong,
-                                                      predictIconColor:
-                                                          percentageChange >= 0
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                      monthlyDifferent:
-                                                          '${percentageChange.toStringAsFixed(2)}%',
+                                                      predictIcon: percentageChange >= 0 ? FontAwesomeIcons.arrowUpLong : FontAwesomeIcons.arrowDownLong,
+                                                      predictIconColor: percentageChange >= 0 ? Colors.green : Colors.red,
+                                                      monthlyDifferent: '${percentageChange.toStringAsFixed(2)}%',
                                                       difWithoutCurrency: true,
                                                     ),
                                                     const SizedBox(width: 20),
                                                     TotalSummary(
-                                                      title: lang.S
-                                                          .of(context)
-                                                          .sAmount,
-                                                      count:
-                                                          '$totalSaleOfCurrentMonth',
+                                                      title: lang.S.of(context).sAmount,
+                                                      count: '$totalSaleOfCurrentMonth',
                                                       withOutCurrency: false,
-                                                      footerTitle: 'This Month',
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFFDFDAFF),
+                                                      footerTitle: 'Este mês',
+                                                      backgroundColor: const Color(0xFFDFDAFF),
                                                       icon: 'images/sale.svg',
-                                                      predictIcon:
-                                                          percentageChange >= 0
-                                                              ? FontAwesomeIcons
-                                                                  .arrowUpLong
-                                                              : FontAwesomeIcons
-                                                                  .arrowDownLong,
-                                                      predictIconColor:
-                                                          percentageChange >= 0
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                      monthlyDifferent:
-                                                          '${salePercentage.toStringAsFixed(2)}%',
+                                                      predictIcon: percentageChange >= 0 ? FontAwesomeIcons.arrowUpLong : FontAwesomeIcons.arrowDownLong,
+                                                      predictIconColor: percentageChange >= 0 ? Colors.green : Colors.red,
+                                                      monthlyDifferent: '${salePercentage.toStringAsFixed(2)}%',
                                                       difWithoutCurrency: false,
                                                     ),
                                                     const SizedBox(width: 20),
                                                     TotalSummary(
-                                                      title: lang.S
-                                                          .of(context)
-                                                          .profit,
-                                                      count:
-                                                          "$totalProfitCurrentMonth",
+                                                      title: lang.S.of(context).profit,
+                                                      count: "$totalProfitCurrentMonth",
                                                       withOutCurrency: false,
-                                                      footerTitle: 'This Month',
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFFC8E6FE),
+                                                      footerTitle: 'Este mês',
+                                                      backgroundColor: const Color(0xFFC8E6FE),
                                                       icon: 'images/pur.svg',
-                                                      predictIcon:
-                                                          percentageChange >= 0
-                                                              ? FontAwesomeIcons
-                                                                  .arrowUpLong
-                                                              : FontAwesomeIcons
-                                                                  .arrowDownLong,
-                                                      predictIconColor:
-                                                          percentageChange >= 0
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                      monthlyDifferent:
-                                                          '${profitPercentage.toStringAsFixed(2)}%',
+                                                      predictIcon: percentageChange >= 0 ? FontAwesomeIcons.arrowUpLong : FontAwesomeIcons.arrowDownLong,
+                                                      predictIconColor: percentageChange >= 0 ? Colors.green : Colors.red,
+                                                      monthlyDifferent: '${profitPercentage.toStringAsFixed(2)}%',
                                                       difWithoutCurrency: false,
                                                     ),
                                                     const SizedBox(width: 20),
                                                     TotalSummary(
-                                                      title: lang.S
-                                                          .of(context)
-                                                          .expenses,
-                                                      count:
-                                                          "$totalExpenseOfCurrentMonth",
+                                                      title: lang.S.of(context).expenses,
+                                                      count: "$totalExpenseOfCurrentMonth",
                                                       withOutCurrency: false,
-                                                      footerTitle: 'This Month',
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFFFFD6E2),
+                                                      footerTitle: 'Este mês',
+                                                      backgroundColor: const Color(0xFFFFD6E2),
                                                       icon: 'images/ex.svg',
-                                                      predictIcon:
-                                                          percentageChange >= 0
-                                                              ? FontAwesomeIcons
-                                                                  .arrowUpLong
-                                                              : FontAwesomeIcons
-                                                                  .arrowDownLong,
-                                                      predictIconColor:
-                                                          percentageChange >= 0
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                      monthlyDifferent:
-                                                          '${expensePercentage.toStringAsFixed(2)}%',
+                                                      predictIcon: percentageChange >= 0 ? FontAwesomeIcons.arrowUpLong : FontAwesomeIcons.arrowDownLong,
+                                                      predictIconColor: percentageChange >= 0 ? Colors.green : Colors.red,
+                                                      monthlyDifferent: '${expensePercentage.toStringAsFixed(2)}%',
                                                       difWithoutCurrency: false,
                                                     ),
                                                     const SizedBox(width: 20),
-                                                    incomes.when(
-                                                        data: (allIncome) {
+                                                    incomes.when(data: (allIncome) {
                                                       totalIncomeOfYear = [];
-                                                      incomeCountOfCurrentMonth =
-                                                          [];
-                                                      incomeCountOfLastMonth =
-                                                          [];
-                                                      totalIncomeOfCurrentYear =
-                                                          0;
-                                                      totalIncomeOfPreviousYear =
-                                                          0;
-                                                      totalIncomeOfCurrentMonth =
-                                                          0;
-                                                      monthlyIncome = [
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0,
-                                                        0
-                                                      ];
-                                                      totalIncomeOfLastMonth =
-                                                          0;
+                                                      incomeCountOfCurrentMonth = [];
+                                                      incomeCountOfLastMonth = [];
+                                                      totalIncomeOfCurrentYear = 0;
+                                                      totalIncomeOfPreviousYear = 0;
+                                                      totalIncomeOfCurrentMonth = 0;
+                                                      monthlyIncome = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                                                      totalIncomeOfLastMonth = 0;
                                                       incomeList = [];
 
-                                                      for (var element
-                                                          in allIncome) {
-                                                        final incomeDate = DateTime
-                                                                .tryParse(element
-                                                                    .incomeDate
-                                                                    .toString()) ??
-                                                            DateTime.now();
-                                                        if (incomeDate.isAfter(
-                                                            firstDayOfCurrentYear)) {
-                                                          totalIncomeOfCurrentYear +=
-                                                              double.parse(element
-                                                                  .amount
-                                                                  .toString());
-                                                          monthlyIncome[
-                                                              incomeDate.month -
-                                                                  1] += double
-                                                              .parse(element
-                                                                  .amount
-                                                                  .toString());
-                                                          totalIncomeOfYear
-                                                              .add(element);
+                                                      for (var element in allIncome) {
+                                                        final incomeDate = DateTime.tryParse(element.incomeDate.toString()) ?? DateTime.now();
+                                                        if (incomeDate.isAfter(firstDayOfCurrentYear)) {
+                                                          totalIncomeOfCurrentYear += double.parse(element.amount.toString());
+                                                          monthlyIncome[incomeDate.month - 1] += double.parse(element.amount.toString());
+                                                          totalIncomeOfYear.add(element);
 
-                                                          if (incomeDate.isAfter(
-                                                              firstDayOfCurrentMonth)) {
-                                                            totalIncomeOfCurrentMonth +=
-                                                                double.parse(element
-                                                                    .amount
-                                                                    .toString());
-                                                            incomeCountOfCurrentMonth
-                                                                .add(element);
+                                                          if (incomeDate.isAfter(firstDayOfCurrentMonth)) {
+                                                            totalIncomeOfCurrentMonth += double.parse(element.amount.toString());
+                                                            incomeCountOfCurrentMonth.add(element);
                                                           }
 
-                                                          if (incomeDate.isAfter(
-                                                                  firstDayOfPreviousMonth) &&
-                                                              incomeDate.isBefore(
-                                                                  firstDayOfCurrentMonth)) {
-                                                            totalIncomeOfLastMonth +=
-                                                                double.parse(element
-                                                                    .amount
-                                                                    .toString());
-                                                            incomeCountOfLastMonth
-                                                                .add(element);
+                                                          if (incomeDate.isAfter(firstDayOfPreviousMonth) && incomeDate.isBefore(firstDayOfCurrentMonth)) {
+                                                            totalIncomeOfLastMonth += double.parse(element.amount.toString());
+                                                            incomeCountOfLastMonth.add(element);
                                                           }
                                                         }
                                                       }
 
                                                       // _______________________________________total_expense_amount_____________
-                                                      int currentMonthIncome =
-                                                          totalIncomeOfCurrentMonth
-                                                              .round();
-                                                      int previousMonthIncome =
-                                                          totalIncomeOfLastMonth
-                                                              .round();
-                                                      double incomePercentage =
-                                                          0.0;
-                                                      if (previousMonthIncome >
-                                                          0) {
-                                                        incomePercentage =
-                                                            ((currentMonthIncome -
-                                                                        previousMonthIncome) /
-                                                                    previousMonthIncome) *
-                                                                100;
-                                                      } else if (previousMonthIncome ==
-                                                          0) {
-                                                        incomePercentage =
-                                                            (currentMonthIncome -
-                                                                    previousMonthIncome) *
-                                                                100;
+                                                      int currentMonthIncome = totalIncomeOfCurrentMonth.round();
+                                                      int previousMonthIncome = totalIncomeOfLastMonth.round();
+                                                      double incomePercentage = 0.0;
+                                                      if (previousMonthIncome > 0) {
+                                                        incomePercentage = ((currentMonthIncome - previousMonthIncome) / previousMonthIncome) * 100;
+                                                      } else if (previousMonthIncome == 0) {
+                                                        incomePercentage = (currentMonthIncome - previousMonthIncome) * 100;
                                                       } else {
-                                                        incomePercentage =
-                                                            ((currentMonthIncome -
-                                                                            previousMonthIncome)
-                                                                        .abs() /
-                                                                    previousMonthIncome
-                                                                        .abs()) *
-                                                                100;
+                                                        incomePercentage = ((currentMonthIncome - previousMonthIncome).abs() / previousMonthIncome.abs()) * 100;
                                                       }
 
                                                       return TotalSummary(
-                                                        title: lang.S
-                                                            .of(context)
-                                                            .inc,
-                                                        count:
-                                                            "$totalIncomeOfCurrentMonth",
+                                                        title: lang.S.of(context).inc,
+                                                        count: "$totalIncomeOfCurrentMonth",
                                                         withOutCurrency: false,
-                                                        footerTitle:
-                                                            'This Month',
-                                                        backgroundColor:
-                                                            const Color(
-                                                                0xFFC5FDBF),
+                                                        footerTitle: 'Este mês',
+                                                        backgroundColor: const Color(0xFFC5FDBF),
                                                         icon: 'images/in.svg',
-                                                        predictIcon:
-                                                            percentageChange >=
-                                                                    0
-                                                                ? FontAwesomeIcons
-                                                                    .arrowUpLong
-                                                                : FontAwesomeIcons
-                                                                    .arrowDownLong,
-                                                        predictIconColor:
-                                                            percentageChange >=
-                                                                    0
-                                                                ? Colors.green
-                                                                : Colors.red,
-                                                        monthlyDifferent:
-                                                            '${incomePercentage.toStringAsFixed(2)}%',
-                                                        difWithoutCurrency:
-                                                            false,
+                                                        predictIcon: percentageChange >= 0 ? FontAwesomeIcons.arrowUpLong : FontAwesomeIcons.arrowDownLong,
+                                                        predictIconColor: percentageChange >= 0 ? Colors.green : Colors.red,
+                                                        monthlyDifferent: '${incomePercentage.toStringAsFixed(2)}%',
+                                                        difWithoutCurrency: false,
                                                       );
                                                     }, error: (e, stack) {
                                                       return Center(
-                                                        child:
-                                                            Text(e.toString()),
+                                                        child: Text(e.toString()),
                                                       );
                                                     }, loading: () {
                                                       return const Center(
-                                                        child:
-                                                            CircularProgressIndicator(),
+                                                        child: CircularProgressIndicator(),
                                                       );
                                                     }),
                                                   ],
                                                 ),
                                                 const SizedBox(height: 20),
                                                 StatisticsData(
-                                                  totalSaleCurrentMonths:
-                                                      totalSaleOfCurrentMonth,
-                                                  totalSaleLastMonth:
-                                                      totalSaleOfLastMonth,
-                                                  totalSaleCurrentYear:
-                                                      totalSaleOfCurrentYear,
+                                                  totalSaleCurrentMonths: totalSaleOfCurrentMonth,
+                                                  totalSaleLastMonth: totalSaleOfLastMonth,
+                                                  totalSaleCurrentYear: totalSaleOfCurrentYear,
                                                   monthlySale: monthlySale,
                                                   dailySale: dailySale,
                                                   totalSaleCount: 0.0,
                                                   freeUser: 0.0,
-                                                  totalExpenseCurrentYear:
-                                                      totalExpenseOfCurrentYear,
-                                                  totalExpenseCurrentMonths:
-                                                      totalExpenseOfCurrentMonth,
-                                                  totalExpenseLastMonth:
-                                                      totalExpenseOfLastMonth,
-                                                  monthlyExpense:
-                                                      monthlyExpense,
+                                                  totalExpenseCurrentYear: totalExpenseOfCurrentYear,
+                                                  totalExpenseCurrentMonths: totalExpenseOfCurrentMonth,
+                                                  totalExpenseLastMonth: totalExpenseOfLastMonth,
+                                                  monthlyExpense: monthlyExpense,
                                                   dailyExpense: dailyExpense,
                                                 ),
                                               ],
@@ -1241,8 +851,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                             );
                                           }, loading: () {
                                             return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                              child: CircularProgressIndicator(),
                                             );
                                           });
                                         }, error: (e, stack) {
@@ -1257,638 +866,223 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
 
                                         //________________________________________top_five_table_______________________
                                         const SizedBox(height: 20),
-                                        // transactionReport.when(data: (topSell) {
-                                        //   List<AddToCartModel> saleProductList =
-                                        //       [];
-                                        //   List<CustomerModel>
-                                        //       currentMonthCustomerList = [];
-                                        //   bool isContain(
-                                        //       {required AddToCartModel
-                                        //           element}) {
-                                        //     for (var p in saleProductList) {
-                                        //       if (p.productName ==
-                                        //               element.productName &&
-                                        //           p.productId ==
-                                        //               element.productId) {
-                                        //         p.quantity += element.quantity;
-                                        //         return true;
-                                        //       }
-                                        //     }
-                                        //     return false;
-                                        //   }
-                                        //
-                                        //   bool isContainCustomer(
-                                        //       {required SaleTransactionModel
-                                        //           element}) {
-                                        //     for (var p
-                                        //         in currentMonthCustomerList) {
-                                        //       if (p.customerName ==
-                                        //               element.customerName &&
-                                        //           p.phoneNumber ==
-                                        //               element.customerPhone) {
-                                        //         p.openingBalance = (double.parse(
-                                        //                     p.openingBalance) +
-                                        //                 double.parse(element
-                                        //                     .totalAmount
-                                        //                     .toString()))
-                                        //             .toString();
-                                        //
-                                        //         return true;
-                                        //       }
-                                        //     }
-                                        //     return false;
-                                        //   }
-                                        //
-                                        //   for (var element in topSell) {
-                                        //     final saleData = DateTime.tryParse(
-                                        //             element.purchaseDate
-                                        //                 .toString()) ??
-                                        //         DateTime.now();
-                                        //   }
-                                        //
-                                        //   for (var element in topSell) {
-                                        //     final saleData = DateTime.tryParse(
-                                        //             element.purchaseDate
-                                        //                 .toString()) ??
-                                        //         DateTime.now();
-                                        //     if (isAfterFirstDayOfCurrentMonth(
-                                        //         saleData)) {
-                                        //       ///___For_Top_Customer____________________
-                                        //       if (!isContainCustomer(
-                                        //           element: element)) {
-                                        //         currentMonthCustomerList.add(
-                                        //           CustomerModel(
-                                        //             customerName:
-                                        //                 element.customerName,
-                                        //             phoneNumber:
-                                        //                 element.customerPhone,
-                                        //             type: element.customerType,
-                                        //             profilePicture:
-                                        //                 element.customerImage,
-                                        //             emailAddress: '',
-                                        //             customerAddress:
-                                        //                 element.customerAddress,
-                                        //             dueAmount: element.dueAmount
-                                        //                 .toString(),
-                                        //             openingBalance: element
-                                        //                 .totalAmount
-                                        //                 .toString(),
-                                        //             remainedBalance: element
-                                        //                 .dueAmount
-                                        //                 .toString(),
-                                        //             gst: element.customerGst,
-                                        //           ),
-                                        //         );
-                                        //       }
-                                        //
-                                        //       ///____Top_sealing_product______________________
-                                        //       for (var product
-                                        //           in element.productList ??
-                                        //               []) {
-                                        //         if (!isContain(
-                                        //             element: product)) {
-                                        //           AddToCartModel a =
-                                        //               AddToCartModel(
-                                        //             warehouseId:
-                                        //                 product.warehouseId,
-                                        //             warehouseName:
-                                        //                 product.warehouseName,
-                                        //             productPurchasePrice: product
-                                        //                 .productPurchasePrice,
-                                        //             productImage:
-                                        //                 product.productImage,
-                                        //             productBrandName: product
-                                        //                 .productBrandName,
-                                        //             productDetails:
-                                        //                 product.productDetails,
-                                        //             productId:
-                                        //                 product.productId,
-                                        //             productName:
-                                        //                 product.productName,
-                                        //             productWarranty:
-                                        //                 product.productWarranty,
-                                        //             quantity: product.quantity,
-                                        //             serialNumber:
-                                        //                 product.serialNumber,
-                                        //             stock: product.stock,
-                                        //             subTotal: product.subTotal,
-                                        //             uniqueCheck:
-                                        //                 product.uniqueCheck,
-                                        //             unitPrice:
-                                        //                 product.unitPrice,
-                                        //             uuid: product.uuid,
-                                        //             itemCartIndex:
-                                        //                 product.itemCartIndex,
-                                        //             subTaxes: product.subTaxes,
-                                        //             excTax: product.excTax,
-                                        //             groupTaxName:
-                                        //                 product.groupTaxName,
-                                        //             groupTaxRate:
-                                        //                 product.groupTaxRate,
-                                        //             incTax: product.incTax,
-                                        //             margin: product.margin,
-                                        //             taxType: product.taxType,
-                                        //           );
-                                        //           saleProductList.add(a);
-                                        //         }
-                                        //       }
-                                        //     }
-                                        //   }
-                                        //
-                                        //   saleProductList.sort(
-                                        //     (a, b) {
-                                        //       return b.quantity
-                                        //           .compareTo(a.quantity);
-                                        //     },
-                                        //   );
-                                        //   currentMonthCustomerList.sort(
-                                        //     (a, b) {
-                                        //       return double.parse(
-                                        //               b.openingBalance)
-                                        //           .compareTo(double.parse(
-                                        //               a.openingBalance));
-                                        //     },
-                                        //   );
-                                        //
-                                        //   return Row(
-                                        //     mainAxisAlignment:
-                                        //         MainAxisAlignment.start,
-                                        //     crossAxisAlignment:
-                                        //         CrossAxisAlignment.start,
-                                        //     mainAxisSize: MainAxisSize.min,
-                                        //     children: [
-                                        //       //__________________________________________Top_selling_product______
-                                        //       Expanded(
-                                        //         flex: 1,
-                                        //         child: TopSellingProduct(
-                                        //           report: getTopSellingReport(
-                                        //               saleProductList),
-                                        //         ),
-                                        //       ),
-                                        //       const SizedBox(width: 20.0),
-                                        //       //__________________________________________Top_Customer____________
-                                        //       Expanded(
-                                        //         flex: 1,
-                                        //         child: TopCustomerTable(
-                                        //           report: getTopCustomer(
-                                        //               (currentMonthCustomerList)),
-                                        //         ),
-                                        //       ),
-                                        //       const SizedBox(width: 20.0),
-                                        //       //__________________________________________Top_Purchasing_product______
-                                        //       Expanded(
-                                        //         flex: 1,
-                                        //         child: purchaseTransactionReport
-                                        //             .when(
-                                        //           data: (purchase) {
-                                        //             List<ProductModel>
-                                        //                 purchaseProductList =
-                                        //                 [];
-                                        //             bool isContain(
-                                        //                 {required ProductModel
-                                        //                     element}) {
-                                        //               for (var p
-                                        //                   in purchaseProductList) {
-                                        //                 if (p.productCode ==
-                                        //                     element
-                                        //                         .productCode) {
-                                        //                   p.productStock = ((int
-                                        //                                   .tryParse(p
-                                        //                                       .productStock) ??
-                                        //                               0) +
-                                        //                           (int.tryParse(
-                                        //                                   element
-                                        //                                       .productStock) ??
-                                        //                               0))
-                                        //                       .toString();
-                                        //                   return true;
-                                        //                 }
-                                        //               }
-                                        //               return false;
-                                        //             }
-                                        //
-                                        //             for (var element
-                                        //                 in purchase) {
-                                        //               final saleData = DateTime
-                                        //                       .tryParse(element
-                                        //                           .purchaseDate
-                                        //                           .toString()) ??
-                                        //                   DateTime.now();
-                                        //               if (isAfterFirstDayOfCurrentMonth(
-                                        //                   saleData)) {
-                                        //                 ///____Top_purchasing_product______________________
-                                        //                 for (var product
-                                        //                     in element
-                                        //                         .productList!) {
-                                        //                   if (!isContain(
-                                        //                       element:
-                                        //                           product)) {
-                                        //                     purchaseProductList
-                                        //                         .add(
-                                        //                             ProductModel(
-                                        //                       product
-                                        //                           .productName,
-                                        //                       product
-                                        //                           .productCategory,
-                                        //                       product.size,
-                                        //                       product.color,
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       product
-                                        //                           .productCode,
-                                        //                       product
-                                        //                           .productStock,
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       '',
-                                        //                       product
-                                        //                           .warehouseName,
-                                        //                       product
-                                        //                           .warehouseId,
-                                        //                       product
-                                        //                           .productPicture,
-                                        //                       [],
-                                        //                       expiringDate: '',
-                                        //                       lowerStockAlert:
-                                        //                           0,
-                                        //                       manufacturingDate:
-                                        //                           '',
-                                        //                       taxType: '',
-                                        //                       margin: 0,
-                                        //                       excTax: 0,
-                                        //                       incTax: 0,
-                                        //                       groupTaxName: '',
-                                        //                       groupTaxRate: 0,
-                                        //                       subTaxes: [],
-                                        //                     ));
-                                        //                   }
-                                        //                 }
-                                        //               }
-                                        //             }
-                                        //
-                                        //             purchaseProductList.sort(
-                                        //               (a, b) {
-                                        //                 return int.parse(b
-                                        //                         .productStock
-                                        //                         .toString())
-                                        //                     .compareTo(int.parse(a
-                                        //                         .productStock
-                                        //                         .toString()));
-                                        //               },
-                                        //             );
-                                        //
-                                        //             return MtTopStock(
-                                        //               report: getTopPurchaseReport(
-                                        //                   purchaseProductList),
-                                        //             );
-                                        //           },
-                                        //           error: (e, stack) {
-                                        //             return Center(
-                                        //               child: Text(e.toString()),
-                                        //             );
-                                        //           },
-                                        //           loading: () {
-                                        //             return const Center(
-                                        //               child:
-                                        //                   CircularProgressIndicator(),
-                                        //             );
-                                        //           },
-                                        //         ),
-                                        //       ),
-                                        //     ],
-                                        //   );
-                                        // }, error: (e, stack) {
-                                        //   return Center(
-                                        //     child: Text(e.toString()),
-                                        //   );
-                                        // }, loading: () {
-                                        //   return const Center(
-                                        //     child: CircularProgressIndicator(),
-                                        //   );
-                                        // }),
-                                        transactionReport.when(
-                                          data: (topSell) {
-                                            List<AddToCartModel>
-                                                saleProductList = [];
-                                            List<CustomerModel>
-                                                currentMonthCustomerList = [];
-
-                                            bool isContain(
-                                                {required AddToCartModel
-                                                    element}) {
-                                              for (var p in saleProductList) {
-                                                if (p.productName ==
-                                                        element.productName &&
-                                                    p.productId ==
-                                                        element.productId) {
-                                                  p.quantity +=
-                                                      element.quantity;
-                                                  return true;
-                                                }
+                                        transactionReport.when(data: (topSell) {
+                                          List<AddToCartModel> saleProductList = [];
+                                          List<CustomerModel> currentMonthCustomerList = [];
+                                          bool isContain({required AddToCartModel element}) {
+                                            for (var p in saleProductList) {
+                                              if (p.productName == element.productName && p.productId == element.productId) {
+                                                p.quantity += element.quantity;
+                                                return true;
                                               }
-                                              return false;
                                             }
+                                            return false;
+                                          }
 
-                                            bool isContainCustomer(
-                                                {required SaleTransactionModel
-                                                    element}) {
-                                              for (var p
-                                                  in currentMonthCustomerList) {
-                                                if (p.customerName ==
-                                                        element.customerName &&
-                                                    p.phoneNumber ==
-                                                        element.customerPhone) {
-                                                  p.openingBalance = (double.parse(p
-                                                              .openingBalance) +
-                                                          double.parse(element
-                                                              .totalAmount
-                                                              .toString()))
-                                                      .toString();
-                                                  return true;
-                                                }
+                                          bool isContainCustomer({required SaleTransactionModel element}) {
+                                            for (var p in currentMonthCustomerList) {
+                                              if (p.customerName == element.customerName && p.phoneNumber == element.customerPhone) {
+                                                p.openingBalance = (double.parse(p.openingBalance) + double.parse(element.totalAmount.toString())).toString();
+
+                                                return true;
                                               }
-                                              return false;
                                             }
+                                            return false;
+                                          }
 
-                                            // Process top selling products and customers
-                                            for (var element in topSell) {
-                                              final saleData =
-                                                  DateTime.tryParse(element
-                                                          .purchaseDate
-                                                          .toString()) ??
-                                                      DateTime.now();
-                                              if (isAfterFirstDayOfCurrentMonth(
-                                                  saleData)) {
-                                                // Process customers
-                                                if (!isContainCustomer(
-                                                    element: element)) {
-                                                  currentMonthCustomerList
-                                                      .add(CustomerModel(
-                                                    customerName:
-                                                        element.customerName,
-                                                    phoneNumber:
-                                                        element.customerPhone,
+                                          for (var element in topSell) {
+                                            final saleData = DateTime.tryParse(element.purchaseDate.toString()) ?? DateTime.now();
+                                          }
+
+                                          for (var element in topSell) {
+                                            final saleData = DateTime.tryParse(element.purchaseDate.toString()) ?? DateTime.now();
+                                            if (isAfterFirstDayOfCurrentMonth(saleData)) {
+                                              ///___For_Top_Customer____________________
+                                              if (!isContainCustomer(element: element)) {
+                                                currentMonthCustomerList.add(
+                                                  CustomerModel(
+                                                    customerName: element.customerName,
+                                                    phoneNumber: element.customerPhone,
                                                     type: element.customerType,
-                                                    profilePicture:
-                                                        element.customerImage,
+                                                    profilePicture: element.customerImage,
                                                     emailAddress: '',
-                                                    customerAddress:
-                                                        element.customerAddress,
-                                                    dueAmount: element.dueAmount
-                                                        .toString(),
-                                                    openingBalance: element
-                                                        .totalAmount
-                                                        .toString(),
-                                                    remainedBalance: element
-                                                        .dueAmount
-                                                        .toString(),
+                                                    customerAddress: element.customerAddress,
+                                                    dueAmount: element.dueAmount.toString(),
+                                                    openingBalance: element.totalAmount.toString(),
+                                                    remainedBalance: element.dueAmount.toString(),
                                                     gst: element.customerGst,
-                                                  ));
-                                                }
+                                                  ),
+                                                );
+                                              }
 
-                                                // Process products
-                                                for (var product
-                                                    in element.productList ??
-                                                        []) {
-                                                  if (!isContain(
-                                                      element: product)) {
-                                                    AddToCartModel a =
-                                                        AddToCartModel(
-                                                      warehouseId:
-                                                          product.warehouseId,
-                                                      warehouseName:
-                                                          product.warehouseName,
-                                                      productPurchasePrice: product
-                                                          .productPurchasePrice,
-                                                      productImage:
-                                                          product.productImage,
-                                                      productBrandName: product
-                                                          .productBrandName,
-                                                      productDetails: product
-                                                          .productDetails,
-                                                      productId:
-                                                          product.productId,
-                                                      productName:
-                                                          product.productName,
-                                                      productWarranty: product
-                                                          .productWarranty,
-                                                      quantity:
-                                                          product.quantity,
-                                                      serialNumber:
-                                                          product.serialNumber,
-                                                      stock: product.stock,
-                                                      subTotal:
-                                                          product.subTotal,
-                                                      uniqueCheck:
-                                                          product.uniqueCheck,
-                                                      unitPrice:
-                                                          product.unitPrice,
-                                                      uuid: product.uuid,
-                                                      itemCartIndex:
-                                                          product.itemCartIndex,
-                                                      subTaxes:
-                                                          product.subTaxes,
-                                                      excTax: product.excTax,
-                                                      groupTaxName:
-                                                          product.groupTaxName,
-                                                      groupTaxRate:
-                                                          product.groupTaxRate,
-                                                      incTax: product.incTax,
-                                                      margin: product.margin,
-                                                      taxType: product.taxType,
-                                                    );
-                                                    saleProductList.add(a);
-                                                  }
+                                              ///____Top_sealing_product______________________
+                                              for (var product in element.productList ?? []) {
+                                                if (!isContain(element: product)) {
+                                                  AddToCartModel a = AddToCartModel(
+                                                    warehouseId: product.warehouseId,
+                                                    warehouseName: product.warehouseName,
+                                                    productPurchasePrice: product.productPurchasePrice,
+                                                    productImage: product.productImage,
+                                                    productBrandName: product.productBrandName,
+                                                    productDetails: product.productDetails,
+                                                    productId: product.productId,
+                                                    productName: product.productName,
+                                                    productWarranty: product.productWarranty,
+                                                    quantity: product.quantity,
+                                                    serialNumber: product.serialNumber,
+                                                    stock: product.stock,
+                                                    subTotal: product.subTotal,
+                                                    uniqueCheck: product.uniqueCheck,
+                                                    unitPrice: product.unitPrice,
+                                                    uuid: product.uuid,
+                                                    itemCartIndex: product.itemCartIndex,
+                                                    subTaxes: product.subTaxes,
+                                                    excTax: product.excTax,
+                                                    groupTaxName: product.groupTaxName,
+                                                    groupTaxRate: product.groupTaxRate,
+                                                    incTax: product.incTax,
+                                                    margin: product.margin,
+                                                    taxType: product.taxType,
+                                                  );
+                                                  saleProductList.add(a);
                                                 }
                                               }
                                             }
+                                          }
 
-                                            saleProductList.sort((a, b) => b
-                                                .quantity
-                                                .compareTo(a.quantity));
-                                            currentMonthCustomerList.sort((a,
-                                                    b) =>
-                                                double.parse(b.openingBalance)
-                                                    .compareTo(double.parse(
-                                                        a.openingBalance)));
+                                          saleProductList.sort(
+                                            (a, b) {
+                                              return b.quantity.compareTo(a.quantity);
+                                            },
+                                          );
+                                          currentMonthCustomerList.sort(
+                                            (a, b) {
+                                              return double.parse(b.openingBalance).compareTo(double.parse(a.openingBalance));
+                                            },
+                                          );
 
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                // Top selling products
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: TopSellingProduct(
-                                                    report: getTopSellingReport(
-                                                        saleProductList),
-                                                  ),
+                                          return Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              //__________________________________________Top_selling_product______
+                                              Expanded(
+                                                flex: 1,
+                                                child: TopSellingProduct(
+                                                  report: getTopSellingReport(saleProductList),
                                                 ),
-                                                const SizedBox(width: 20.0),
-                                                // Top customers
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: TopCustomerTable(
-                                                    report: getTopCustomer(
-                                                        currentMonthCustomerList),
-                                                  ),
+                                              ),
+                                              const SizedBox(width: 20.0),
+                                              //__________________________________________Top_Customer____________
+                                              Expanded(
+                                                flex: 1,
+                                                child: TopCustomerTable(
+                                                  report: getTopCustomer((currentMonthCustomerList)),
                                                 ),
-                                                const SizedBox(width: 20.0),
-                                                // Top purchasing products
-                                                Expanded(
-                                                  flex: 1,
-                                                  child:
-                                                      purchaseTransactionReport
-                                                          .when(
-                                                    data: (purchase) {
-                                                      List<ProductModel>
-                                                          purchaseProductList =
-                                                          [];
-
-                                                      bool isContain(
-                                                          {required ProductModel
-                                                              element}) {
-                                                        for (var p
-                                                            in purchaseProductList) {
-                                                          if (p.productCode ==
-                                                              element
-                                                                  .productCode) {
-                                                            p.productStock =
-                                                                ((int.tryParse(p.productStock) ??
-                                                                            0) +
-                                                                        (int.tryParse(element.productStock) ??
-                                                                            0))
-                                                                    .toString();
-                                                            return true;
-                                                          }
+                                              ),
+                                              const SizedBox(width: 20.0),
+                                              //__________________________________________Top_Purchasing_product______
+                                              Expanded(
+                                                flex: 1,
+                                                child: purchaseTransactionReport.when(
+                                                  data: (purchase) {
+                                                    List<ProductModel> purchaseProductList = [];
+                                                    bool isContain({required ProductModel element}) {
+                                                      for (var p in purchaseProductList) {
+                                                        if (p.productCode == element.productCode) {
+                                                          p.productStock = ((int.tryParse(p.productStock)??0) + (int.tryParse(element.productStock)??0)).toString();
+                                                          return true;
                                                         }
-                                                        return false;
                                                       }
+                                                      return false;
+                                                    }
 
-                                                      for (var element
-                                                          in purchase) {
-                                                        final saleData = DateTime
-                                                                .tryParse(element
-                                                                    .purchaseDate
-                                                                    .toString()) ??
-                                                            DateTime.now();
-                                                        if (isAfterFirstDayOfCurrentMonth(
-                                                            saleData)) {
-                                                          // Process purchasing products
-                                                          for (var product
-                                                              in element
-                                                                      .productList ??
-                                                                  []) {
-                                                            if (!isContain(
-                                                                element:
-                                                                    product)) {
-                                                              purchaseProductList
-                                                                  .add(
-                                                                      ProductModel(
-                                                                product
-                                                                    .productName,
-                                                                product
-                                                                    .productCategory,
-                                                                product.size,
-                                                                product.color,
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                product
-                                                                    .productCode,
-                                                                product
-                                                                    .productStock,
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                '',
-                                                                product
-                                                                    .warehouseName,
-                                                                product
-                                                                    .warehouseId,
-                                                                product
-                                                                    .productPicture,
-                                                                [],
-                                                                expiringDate:
-                                                                    '',
-                                                                lowerStockAlert:
-                                                                    0,
-                                                                manufacturingDate:
-                                                                    '',
-                                                                taxType: '',
-                                                                margin: 0,
-                                                                excTax: 0,
-                                                                incTax: 0,
-                                                                groupTaxName:
-                                                                    '',
-                                                                groupTaxRate: 0,
-                                                                subTaxes: [],
-                                                              ));
-                                                            }
+                                                    for (var element in purchase) {
+                                                      final saleData = DateTime.tryParse(element.purchaseDate.toString()) ?? DateTime.now();
+                                                      if (isAfterFirstDayOfCurrentMonth(saleData)) {
+                                                        ///____Top_purchasing_product______________________
+                                                        for (var product in element.productList!) {
+                                                          if (!isContain(element: product)) {
+                                                            purchaseProductList.add(ProductModel(
+                                                              product.productName,
+                                                              product.productCategory,
+                                                              product.size,
+                                                              product.color,
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              product.productCode,
+                                                              product.productStock,
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              '',
+                                                              product.warehouseName,
+                                                              product.warehouseId,
+                                                              product.productPicture,
+                                                              [],
+                                                              expiringDate: '',
+                                                              lowerStockAlert: 0,
+                                                              manufacturingDate: '',
+                                                              taxType: '',
+                                                              margin: 0,
+                                                              excTax: 0,
+                                                              incTax: 0,
+                                                              groupTaxName: '',
+                                                              groupTaxRate: 0,
+                                                              subTaxes: [],
+                                                            ));
                                                           }
                                                         }
                                                       }
+                                                    }
 
-                                                      purchaseProductList.sort(
-                                                          (a, b) => int.parse(b
-                                                                  .productStock)
-                                                              .compareTo(int.parse(
-                                                                  a.productStock)));
+                                                    purchaseProductList.sort(
+                                                      (a, b) {
+                                                        return int.parse(b.productStock.toString()).compareTo(int.parse(a.productStock.toString()));
+                                                      },
+                                                    );
 
-                                                      return MtTopStock(
-                                                          report: getTopPurchaseReport(
-                                                              purchaseProductList));
-                                                    },
-                                                    error: (e, stack) {
-                                                      return Center(
-                                                          child: Text(
-                                                              e.toString()));
-                                                    },
-                                                    loading: () {
-                                                      return const Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    },
-                                                  ),
+                                                    return MtTopStock(
+                                                      report: getTopPurchaseReport(purchaseProductList),
+                                                    );
+                                                  },
+                                                  error: (e, stack) {
+                                                    return Center(
+                                                      child: Text(e.toString()),
+                                                    );
+                                                  },
+                                                  loading: () {
+                                                    return const Center(
+                                                      child: CircularProgressIndicator(),
+                                                    );
+                                                  },
                                                 ),
-                                              ],
-                                            );
-                                          },
-                                          error: (e, stack) {
-                                            return Center(
-                                                child: Text(e.toString()));
-                                          },
-                                          loading: () {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          },
-                                        ),
+                                              ),
+                                            ],
+                                          );
+                                        }, error: (e, stack) {
+                                          return Center(
+                                            child: Text(e.toString()),
+                                          );
+                                        }, loading: () {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }),
                                         const SizedBox(width: 20.0),
 
                                         //_______________________________________________________recent_sales___________
                                         const SizedBox(height: 20),
                                         Container(
                                           padding: const EdgeInsets.all(20.0),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(16.0),
-                                              color: kWhite),
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0), color: kWhite),
                                           child: Column(
                                             children: [
                                               Row(
@@ -1896,302 +1090,120 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                                   const Icon(FeatherIcons.box),
                                                   const SizedBox(width: 5.0),
                                                   Text(
-                                                    lang.S
-                                                        .of(context)
-                                                        .recentSale,
+                                                    lang.S.of(context).recentSale,
                                                     maxLines: 1,
-                                                    style: kTextStyle.copyWith(
-                                                        color: kTitleColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        overflow: TextOverflow
-                                                            .ellipsis),
+                                                    style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
                                                   ),
                                                   const Spacer(),
                                                   Text(
                                                     totalSaleList.length > 5
-                                                        ? '${lang.S.of(context).showing} ${recentFive.length} ${lang.S.of(context).OF} ${totalSaleList.length}'
-                                                        : '${lang.S.of(context).showing} ${totalSaleList.length} ${lang.S.of(context).OF} ${totalSaleList.length}',
-                                                    style: kTextStyle.copyWith(
-                                                        color: kTitleColor,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                        ? 'Showing ${recentFive.length} of ${totalSaleList.length}'
+                                                        : 'Showing ${totalSaleList.length} of ${totalSaleList.length}',
+                                                    style: kTextStyle.copyWith(color: kTitleColor, fontWeight: FontWeight.bold),
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.pushNamed(
-                                                          context,
-                                                          SaleList.route);
+                                                      Navigator.pushNamed(context, SaleList.route);
                                                     },
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                          lang.S
-                                                              .of(context)
-                                                              .viewAll,
-                                                          //'View All',
-                                                          style: kTextStyle
-                                                              .copyWith(
-                                                                  color:
-                                                                      kMainColor),
+                                                          'Ver Tudo',
+                                                          style: kTextStyle.copyWith(color: kMainColor),
                                                         ),
-                                                        const Icon(FeatherIcons
-                                                            .arrowRight),
+                                                        const Icon(FeatherIcons.arrowRight),
                                                       ],
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                               const SizedBox(height: 20),
-                                              transactionReport.when(
-                                                  data: (sellerSnap) {
+                                              transactionReport.when(data: (sellerSnap) {
                                                 shopList = sellerSnap;
-                                                List<SaleTransactionModel>
-                                                    recentSaleList =
-                                                    shopList.length > 5
-                                                        ? shopList.sublist(
-                                                            shopList.length - 5)
-                                                        : shopList;
-                                                recentSaleList = recentSaleList
-                                                    .reversed
-                                                    .toList();
+                                                List<SaleTransactionModel> recentSaleList = shopList.length > 5 ? shopList.sublist(shopList.length - 5) : shopList;
+                                                recentSaleList = recentSaleList.reversed.toList();
                                                 totalSaleList = shopList;
                                                 recentFive = recentSaleList;
                                                 return Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
+                                                  width: MediaQuery.of(context).size.width,
                                                   decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8.0),
-                                                    border: Border.all(
-                                                        color:
-                                                            kBorderColorTextField,
-                                                        strokeAlign: BorderSide
-                                                            .strokeAlignOutside),
+                                                    borderRadius: BorderRadius.circular(8.0),
+                                                    border: Border.all(color: kBorderColorTextField, strokeAlign: BorderSide.strokeAlignOutside),
                                                   ),
                                                   child: DataTable(
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    border: TableBorder.lerp(
-                                                        TableBorder(
-                                                            verticalInside:
-                                                                BorderSide.none,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0)),
-                                                        TableBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8.0)),
-                                                        8.0),
+                                                    clipBehavior: Clip.antiAlias,
+                                                    border: TableBorder.lerp(TableBorder(verticalInside: BorderSide.none, borderRadius: BorderRadius.circular(8.0)),
+                                                        TableBorder(borderRadius: BorderRadius.circular(8.0)), 8.0),
                                                     showCheckboxColumn: true,
                                                     dividerThickness: 1.0,
-                                                    dataRowColor:
-                                                        const MaterialStatePropertyAll(
-                                                            whiteColor),
-                                                    headingRowColor:
-                                                        MaterialStateProperty
-                                                            .all(const Color(
-                                                                0xFFF8F3FF)),
+                                                    dataRowColor: const MaterialStatePropertyAll(whiteColor),
+                                                    headingRowColor: MaterialStateProperty.all(const Color(0xFFF8F3FF)),
                                                     showBottomBorder: false,
-                                                    headingTextStyle:
-                                                        kTextStyle.copyWith(
-                                                            color: kTitleColor,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
-                                                    dataTextStyle:
-                                                        kTextStyle.copyWith(
-                                                            color:
-                                                                kGreyTextColor,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis),
+                                                    headingTextStyle: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis),
+                                                    dataTextStyle: kTextStyle.copyWith(color: kGreyTextColor, overflow: TextOverflow.ellipsis),
                                                     columns: [
                                                       DataColumn(
                                                         label: Text(
-                                                          lang.S.of(context).SL,
-                                                          style: kTextStyle.copyWith(
-                                                              color:
-                                                                  kTitleColor,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis),
+                                                          'Nr',
+                                                          style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis),
                                                         ),
                                                       ),
+                                                      DataColumn(label: Text('Data', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
+                                                      DataColumn(label: Text('Fatura', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
                                                       DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .date,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
-                                                      DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .invoice,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
+                                                          label:
+                                                              Flexible(child: Text('Cliente', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis)))),
                                                       DataColumn(
                                                           label: Flexible(
-                                                              child: Text(
-                                                                  lang.S
-                                                                      .of(
-                                                                          context)
-                                                                      .partyName,
-                                                                  style: kTextStyle.copyWith(
-                                                                      color:
-                                                                          kTitleColor,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis)))),
-                                                      DataColumn(
-                                                          label: Flexible(
-                                                              child: Text(
-                                                                  lang.S
-                                                                      .of(
-                                                                          context)
-                                                                      .paymentType,
-                                                                  style: kTextStyle.copyWith(
-                                                                      color:
-                                                                          kTitleColor,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis)))),
-                                                      DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .amount,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
-                                                      DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .paid,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
-                                                      DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .due,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
-                                                      DataColumn(
-                                                          label: Text(
-                                                              lang.S
-                                                                  .of(context)
-                                                                  .status,
-                                                              style: kTextStyle.copyWith(
-                                                                  color:
-                                                                      kTitleColor,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis))),
+                                                              child: Text('Pago via', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis)))),
+                                                      DataColumn(label: Text('Valor', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
+                                                      DataColumn(label: Text('Pago', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
+                                                      DataColumn(label: Text('Devido', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
+                                                      DataColumn(label: Text('Status', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
                                                       // DataColumn(
                                                       //     label:
                                                       //         Text('Action', style: kTextStyle.copyWith(color: kTitleColor, overflow: TextOverflow.ellipsis))),
                                                     ],
                                                     rows: List.generate(
-                                                      recentSaleList.reversed
-                                                          .toList()
-                                                          .length,
+                                                      recentSaleList.reversed.toList().length,
                                                       (index) => DataRow(
                                                         cells: [
                                                           DataCell(
                                                             Text(
-                                                              (index + 1)
-                                                                  .toString(),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
+                                                              (index + 1).toString(),
+                                                              textAlign: TextAlign.start,
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            Text(dataTypeFormat
-                                                                .format(
+                                                            Text(dataTypeFormat.format(
                                                               DateTime.parse(
-                                                                recentSaleList[
-                                                                        index]
-                                                                    .purchaseDate
-                                                                    .toString(),
+                                                                recentSaleList[index].purchaseDate.toString(),
                                                               ),
                                                             )),
                                                           ),
                                                           DataCell(
                                                             Text(
-                                                              recentSaleList[
-                                                                      index]
-                                                                  .invoiceNumber
-                                                                  .toString(),
-                                                              style: kTextStyle
-                                                                  .copyWith(
-                                                                      color:
-                                                                          kMainColor),
+                                                              recentSaleList[index].invoiceNumber.toString(),
+                                                              style: kTextStyle.copyWith(color: kMainColor),
                                                             ),
                                                           ),
                                                           DataCell(
-                                                            Text(recentSaleList[
-                                                                    index]
-                                                                .customerName
-                                                                .toString()),
+                                                            Text(recentSaleList[index].customerName.toString()),
                                                           ),
                                                           DataCell(
-                                                            Text(recentSaleList[
-                                                                    index]
-                                                                .paymentType
-                                                                .toString()),
+                                                            Text(recentSaleList[index].paymentType.toString()),
                                                           ),
                                                           DataCell(
-                                                            Text(
-                                                                '$currency${recentSaleList[index].totalAmount.toString()}'),
+                                                            Text('${recentSaleList[index].totalAmount.toString()} $currency'),
                                                           ),
                                                           DataCell(
-                                                            Text(
-                                                                '$currency${((recentSaleList[index].totalAmount!) - (double.parse(recentSaleList[index].dueAmount.toString())))}'),
+                                                            Text('${((recentSaleList[index].totalAmount!) - (double.parse(recentSaleList[index].dueAmount.toString())))} $currency'),
                                                           ),
                                                           DataCell(
-                                                            Text(
-                                                                '$currency${recentSaleList[index].dueAmount.toString()}'),
+                                                            Text('${recentSaleList[index].dueAmount.toString()} $currency'),
                                                           ),
                                                           DataCell(
-                                                            Text(recentSaleList[
-                                                                            index]
-                                                                        .isPaid ==
-                                                                    true
-                                                                ? lang.S
-                                                                    .of(context)
-                                                                    .paid
-                                                                : lang.S
-                                                                    .of(context)
-                                                                    .unpaid),
+                                                            Text(recentSaleList[index].isPaid == true ? 'Pago' : "Não Pago"),
                                                           ),
                                                           // DataCell(
                                                           //   PopupMenuButton(
@@ -2232,8 +1244,7 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
                                                 );
                                               }, loading: () {
                                                 return const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
+                                                  child: CircularProgressIndicator(),
                                                 );
                                               })
                                             ],
@@ -2264,21 +1275,12 @@ class _MtHomeScreenState extends State<MtHomeScreen> {
   void getAllTotal() async {
     // ignore: unused_local_variable
     List<ProductModel> productList = [];
-    await FirebaseDatabase.instance
-        .ref(await getUserID())
-        .child('Products')
-        .orderByKey()
-        .get()
-        .then((value) {
+    await FirebaseDatabase.instance.ref(await getUserID()).child('Products').orderByKey().get().then((value) {
       for (var element in value.children) {
         var data = jsonDecode(jsonEncode(element.value));
         totalStock = totalStock + int.parse(data['productStock']);
-        totalSalePrice = totalSalePrice +
-            (num.parse(data['productSalePrice']) *
-                num.parse(data['productStock']));
-        totalParPrice = totalParPrice +
-            (num.parse(data['productPurchasePrice']) *
-                num.parse(data['productStock']));
+        totalSalePrice = totalSalePrice + (num.parse(data['productSalePrice']) * num.parse(data['productStock']));
+        totalParPrice = totalParPrice + (num.parse(data['productPurchasePrice']) * num.parse(data['productStock']));
 
         // productList.add(ProductModel.fromJson(jsonDecode(jsonEncode(element.value))));
       }
